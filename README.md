@@ -2,7 +2,7 @@
 
 Herramienta gráfica ligera desarrollada por **El Abuelazo Tech** para guiar paso a paso en la creación, consulta y asignación de atajos de teclado personalizados y comandos (incluyendo aplicaciones AppImage) en Linux Mint.
 
-![Vista previa de Gatajos](gatajos.jpeg)
+![Vista previa de Gatajos](gatajos.png)
 
 ---
 
