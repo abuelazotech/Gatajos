@@ -1,0 +1,47 @@
+.TH GATAJOS 1 "20 noviembre 2026" "Gatajos 1.0-2" "Manual del usuario"
+.SH NOMBRE
+gatajos \- consulta de atajos de teclado de Linux Mint Cinnamon
+.SH SINOPSIS
+.B gatajos [OPCION] [TECLA]
+.SH DESCRIPCIÓN
+.B gatajos
+lee la configuración de atajos de teclado de Cinnamon mediante GSettings y
+muestra la combinación de teclas junto con la acción asociada.
+.PP
+La herramienta solo consulta la configuración existente. No asigna atajos,
+no abre el panel de ajustes, no usa el portapapeles y no cubre los atajos de
+aplicaciones de terceros.
+.SH OPCIONES
+.TP
+.B \-\-help
+Muestra la ayuda y termina.
+.TP
+.B \-\-version
+Muestra la versión y termina.
+.TP
+.B \-\-listar
+Lista todos los atajos disponibles.
+.TP
+.B \-\-buscar TECLA
+Busca los atajos que coinciden con TECLA.
+.TP
+.B \-\-mostrar-comandos
+Muestra los comandos asociados a los atajos personalizados.
+.TP
+.B TECLA
+Forma abreviada de \-\-buscar TECLA.
+.SH ARCHIVOS
+.TP
+.B /usr/bin/gatajos
+Ejecutable principal.
+.TP
+.B /usr/bin/buscar-atajo
+Enlace simbólico a /usr/bin/gatajos.
+.TP
+.B /usr/share/applications/gatajos.desktop
+Entrada de lanzador para entornos de escritorio.
+.TP
+.B /usr/share/metainfo/com.elabuelazotech.gatajos.metainfo.xml
+Metadatos AppStream del paquete.
+.SH AUTOR
+Angelino Santana (El Abuelazo Tech) <elabuelazotech@gmail.com>

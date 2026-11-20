@@ -1,0 +1,26 @@
+Instrucciones para usar Gatajos
+
+Instalación desde el paquete de una release:
+
+sudo apt install ./gatajos_1.0-2_all.deb
+
+Uso:
+
+gatajos
+buscar-atajo
+
+Los dos comandos son equivalentes y aceptan los mismos argumentos.
+
+Ejemplos:
+
+gatajos f9
+gatajos "alt+c"
+gatajos --listar
+
+Gatajos consulta los atajos de Linux Mint Cinnamon desde GSettings.
+No asigna atajos, no abre el panel de ajustes y no usa el portapapeles.
+No cubre los atajos de aplicaciones externas, incluido OBS.
+
+Para más información, consulta el archivo README.md y la página de manual:
+
+man gatajos

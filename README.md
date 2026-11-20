@@ -1,32 +1,88 @@
-# ⌨️ Gatajos — Asistente Visual de Atajos de Teclado en Linux Mint
+# Gatajos
 
-Herramienta gráfica ligera desarrollada por **El Abuelazo Tech** para guiar paso a paso en la creación, consulta y asignación de atajos de teclado personalizados y comandos (incluyendo aplicaciones AppImage) en Linux Mint.
+![Captura de Gatajos](assets/gatajos.png)
 
-![Vista previa de Gatajos](gatajos.png)
+Gatajos es una utilidad de terminal que consulta los atajos de teclado de Linux Mint Cinnamon. Lee la configuración de GSettings de Cinnamon y muestra la combinación de teclas junto con la acción asociada.
 
----
+## Qué hace y qué NO hace
 
-## ✨ Características principales
+### Qué hace
 
-* **Guía interactiva paso a paso:** Abre directamente los ajustes de teclado de Linux Mint y te indica cada acción sin complicaciones.
-* **Buscador rápido de programas:** Consulta comandos listos para copiar al portapapeles con un solo clic.
-* **Soporte para AppImage:** Instrucciones integradas para vincular programas portables a combinaciones de teclas.
-* **Integración nativa:** Se instala directamente en el menú de aplicaciones de Linux Mint.
+- Consulta los atajos de teclado definidos en la configuración de Cinnamon.
+- Muestra cada combinación de teclas con su acción.
+- Permite buscar por tecla y listar los atajos disponibles.
+- Muestra los comandos asociados a los atajos personalizados con `--mostrar-comandos`.
 
----
+### Qué NO hace
 
-## 🚀 Instalación sencilla (Recomendada)
+- No asigna ni modifica atajos de teclado.
+- No abre el panel de ajustes del sistema.
+- No copia información al portapapeles.
+- No incluye atajos de aplicaciones de terceros, como OBS.
 
-1. Haz clic sobre el archivo **`gatajos_1.0-1_amd64.deb`** en la lista superior de este repositorio.
-2. Pulsa el botón **Download raw file** (icono de descarga a la derecha) para guardarlo en tu equipo.
-3. Haz **doble clic** sobre el archivo descargado en tu gestor de archivos.
-4. Pulsa en **Instalar el paquete** e introduce tu contraseña.
-5. ¡Listo! Ya puedes abrir **Gatajos** desde el menú de inicio de Linux Mint.
+## Instalación
 
----
+Descarga el paquete `gatajos_1.0-2_all.deb` desde la sección de releases del repositorio e instálalo con:
 
-## ☕ Apoya este proyecto
+```sh
+sudo apt install ./gatajos_1.0-2_all.deb
+```
 
-Si esta utilidad te ahorra tiempo y te resulta práctica en tu día a día con Linux, puedes invitarme a un café para seguir creando herramientas gratuitas y contenido educativo:
+El paquete instala dos comandos equivalentes: `gatajos` y `buscar-atajo`.
 
-👉 [**Apoyar a El Abuelazo Tech en Ko-fi**](https://ko-fi.com/abuelazotech)
+## Construcción
+
+Para generar el paquete desde el código fuente:
+
+```sh
+./build.sh
+```
+
+El resultado se guarda en `dist/gatajos_1.0-2_all.deb`.
+
+## Uso
+
+```sh
+gatajos
+gatajos f9
+gatajos "alt+c"
+gatajos --listar
+gatajos --buscar f9
+gatajos --listar --mostrar-comandos
+```
+
+También puedes usar `buscar-atajo` con los mismos argumentos.
+
+## Nombres de comando
+
+- `gatajos`: comando principal.
+- `buscar-atajo`: enlace simbólico a `gatajos`.
+
+## Requisitos
+
+- Linux Mint con entorno de escritorio Cinnamon.
+- `bash`, `glib2.0-bin`, `dconf-gsettings-backend` y `cinnamon-desktop-data`.
+
+## Limitaciones
+
+- Solo consulta los atajos que Cinnamon guarda en GSettings.
+- No cubre atajos internos de aplicaciones externas, incluido OBS.
+- No modifica la configuración del sistema.
+- Requiere un entorno Cinnamon instalado para obtener resultados útiles.
+
+## Resolución de problemas
+
+- Si no aparece ningún atajo, comprueba que estás en Linux Mint con Cinnamon.
+- Si el comando no se encuentra, verifica que el paquete esté instalado con `dpkg -l gatajos`.
+- Para comprobar la versión instalada, ejecuta `gatajos --version`.
+- Para ver la ayuda, ejecuta `gatajos --help`.
+- Si el paquete es de una versión anterior, reinstala el archivo `.deb` de la release 1.0-2.
+
+## Contribuciones
+
+- Reportes y solicitudes: https://github.com/abuelazotech/Gatajos/issues
+- Repositorio: https://github.com/abuelazotech/Gatajos
+
+## Licencia
+
+Gatajos se distribuye bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para el texto completo.

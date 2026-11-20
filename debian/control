@@ -1,0 +1,17 @@
+Source: gatajos
+Section: utils
+Priority: optional
+Maintainer: Angelino Santana (El Abuelazo Tech) <elabuelazotech@gmail.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.2
+Homepage: https://github.com/abuelazotech/Gatajos
+Rules-Requires-Root: no
+
+Package: gatajos
+Architecture: all
+Depends: glib2.0-bin, dconf-gsettings-backend, cinnamon-desktop-data
+Description: Consulta de atajos de la configuración de Cinnamon
+ Gatajos es una utilidad de terminal que lee los atajos de teclado de
+ Cinnamon desde GSettings. Muestra la combinación y su acción.
+ No asigna atajos, no abre ajustes, no usa el portapapeles y no
+ cubre atajos de aplicaciones de terceros.

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.elabuelazotech.gatajos.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Gatajos</name>
+  <summary>Consulta de atajos de teclado de Linux Mint Cinnamon</summary>
+  <description>
+    <p>Gatajos es una utilidad de terminal que consulta los atajos de teclado configurados en Linux Mint Cinnamon mediante GSettings.</p>
+    <p>Solo lee la configuración existente: no asigna atajos, no abre el panel de ajustes, no usa el portapapeles y no incluye atajos de aplicaciones de terceros.</p>
+  </description>
+  <developer id="com.elabuelazotech">
+    <name>Angelino Santana (El Abuelazo Tech)</name>
+    <email>elabuelazotech@gmail.com</email>
+  </developer>
+  <launchable type="desktop-id">gatajos.desktop</launchable>
+  <provides>
+    <binary>gatajos</binary>
+  </provides>
+  <url type="homepage">https://github.com/abuelazotech/Gatajos</url>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="1.0-2" date="2026-11-20"/>
+  </releases>
+</component>

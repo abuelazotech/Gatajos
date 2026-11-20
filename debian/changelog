@@ -1,0 +1,8 @@
+gatajos (1.0-2) stable; urgency=medium
+
+  * Documenta el alcance real de la consulta de atajos de Cinnamon.
+  * Añade lanzador de escritorio, AppStream, página de manual e iconos.
+  * Incluye los nombres de comando gatajos y buscar-atajo en el paquete.
+  * Ajusta la construcción del paquete y la validación continua.
+
+ -- Angelino Santana (El Abuelazo Tech) <elabuelazotech@gmail.com>  Fri, 20 Nov 2026 09:50:00 +0000

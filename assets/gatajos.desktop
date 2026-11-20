@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Gatajos
+GenericName=Buscador de atajos
+Comment=Consulta atajos de teclado en Linux Mint Cinnamon
+Exec=gatajos
+Icon=gatajos
+Terminal=true
+Type=Application
+Version=1.0
+Categories=Utility;
+Keywords=atajos;keybindings;teclado;cinnamon;mint;
+StartupNotify=true

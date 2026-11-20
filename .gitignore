@@ -1,0 +1,16 @@
+.aider*
+*.deb
+dist/
+*.bak
+*~
+.DS_Store
+__pycache__/
+.vscode/
+paquete_gatajos/usr/bin/
+paquete_gatajos/usr/share/applications/
+paquete_gatajos/usr/share/icons/
+paquete_gatajos/usr/share/metainfo/
+paquete_gatajos/usr/share/doc/
+paquete_gatajos/usr/share/man/
+paquete_gatajos/usr/share/lintian/
+paquete_gatajos/usr/bin/buscar-atajo

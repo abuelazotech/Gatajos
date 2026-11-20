@@ -1,0 +1,24 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	install -d debian/gatajos/usr/bin
+	install -d debian/gatajos/usr/share/applications
+	install -d debian/gatajos/usr/share/icons/hicolor/scalable/apps
+	install -d debian/gatajos/usr/share/icons/hicolor/256x256/apps
+	install -d debian/gatajos/usr/share/metainfo
+	install -d debian/gatajos/usr/share/doc/gatajos
+	install -d debian/gatajos/usr/share/man/man1
+	install -d debian/gatajos/usr/share/lintian/overrides
+	install -m 0755 gatajos.sh debian/gatajos/usr/bin/gatajos
+	ln -sf gatajos debian/gatajos/usr/bin/buscar-atajo
+	install -m 0644 assets/gatajos.desktop debian/gatajos/usr/share/applications/gatajos.desktop
+	install -m 0644 assets/gatajos.svg debian/gatajos/usr/share/icons/hicolor/scalable/apps/gatajos.svg
+	install -m 0644 assets/gatajos-256.png debian/gatajos/usr/share/icons/hicolor/256x256/apps/gatajos.png
+	install -m 0644 assets/gatajos.appdata.xml debian/gatajos/usr/share/metainfo/com.elabuelazotech.gatajos.metainfo.xml
+	install -m 0644 debian/copyright debian/gatajos/usr/share/doc/gatajos/copyright
+	gzip -n -9 -c debian/changelog > debian/gatajos/usr/share/doc/gatajos/changelog.Debian.gz
+	gzip -n -9 -c assets/gatajos.1 > debian/gatajos/usr/share/man/man1/gatajos.1.gz
+	install -m 0644 debian/gatajos.lintian-overrides debian/gatajos/usr/share/lintian/overrides/gatajos

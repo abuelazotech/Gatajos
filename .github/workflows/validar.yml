@@ -1,0 +1,25 @@
+name: Validar
+
+on: [push, pull_request]
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar herramientas
+        run: sudo apt-get update && sudo apt-get install -y shellcheck desktop-file-utils lintian imagemagick
+      - name: Verificar sintaxis de gatajos.sh
+        run: bash -n gatajos.sh
+      - name: Verificar sintaxis de las pruebas
+        run: bash -n tests/test_gatajos.sh
+      - name: Analizar gatajos.sh con shellcheck
+        run: shellcheck -S warning gatajos.sh
+      - name: Validar el archivo de escritorio
+        run: desktop-file-validate assets/gatajos.desktop
+      - name: Habilitar permisos de ejecución
+        run: chmod +x build.sh tests/test_gatajos.sh gatajos.sh
+      - name: Ejecutar pruebas
+        run: ./tests/test_gatajos.sh
+      - name: Construir el paquete
+        run: ./build.sh
