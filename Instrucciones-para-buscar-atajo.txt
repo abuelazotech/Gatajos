@@ -2,7 +2,7 @@ Instrucciones para usar Gatajos
 
 Instalación desde el paquete de una release:
 
-sudo apt install ./gatajos_1.0-4_all.deb
+sudo apt install ./gatajos_1.0-5_all.deb
 
 Uso:
 

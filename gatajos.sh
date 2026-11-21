@@ -1,7 +1,7 @@
 #!/bin/bash
 set -uo pipefail
 
-VERSION='1.0-4'
+VERSION='1.0-5'
 MOSTRAR_COMANDOS=0
 
 validar_tecla() {
@@ -27,11 +27,16 @@ validar_tecla() {
 }
 
 verificar_entorno() {
+  local esquemas
   if ! command -v gsettings >/dev/null 2>&1; then
     printf 'Error: no se encontró gsettings. Gatajos necesita GSettings y está pensado para Linux Mint Cinnamon.\n' >&2
     return 1
   fi
-  if ! gsettings list-schemas 2>/dev/null | grep -qx -- 'org.cinnamon.desktop.keybindings'; then
+  esquemas=$(gsettings list-schemas 2>/dev/null) || {
+    printf 'Error: no se pudo consultar la lista de esquemas GSettings.\n' >&2
+    return 1
+  }
+  if ! grep -Fxq -- 'org.cinnamon.desktop.keybindings' <<< "$esquemas"; then
     printf 'Error: no se encontró el esquema org.cinnamon.desktop.keybindings. Gatajos está pensado para Linux Mint Cinnamon y no puede garantizar otros escritorios.\n' >&2
     return 1
   fi

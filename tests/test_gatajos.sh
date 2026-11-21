@@ -12,6 +12,9 @@ cat > "$TEMP_DIR/bin/gsettings" <<'STUB'
 #!/bin/bash
 case "$1" in
   list-schemas)
+    for i in $(seq 1 5000); do
+      printf 'org.prueba.esquema.%s\n' "$i"
+    done
     printf '%s\n' \
       org.cinnamon.desktop.keybindings \
       org.cinnamon.desktop.media-keys \
@@ -89,18 +92,18 @@ comprobar_codigo() {
   fi
 }
 
-printf 'Pruebas de Gatajos 1.0-4\n'
+printf 'Pruebas de Gatajos 1.0-5\n'
 
 salida=$("$GATAJOS" --version 2>&1); codigo=$?
 comprobar_codigo '--version devuelve 0' 0 "$codigo"
-if [[ $salida == *'Gatajos 1.0-4'* ]]; then
+if [[ $salida == *'Gatajos 1.0-5'* ]]; then
   paso '--version muestra la versión'
 else
   fallo '--version muestra la versión'
 fi
 
 salida=$(grep '^Version:' "$SCRIPT_DIR/../paquete_gatajos/DEBIAN/control")
-if [[ $salida == 'Version: 1.0-4' ]]; then
+if [[ $salida == 'Version: 1.0-5' ]]; then
   paso 'DEBIAN/control tiene la versión esperada'
 else
   fallo 'DEBIAN/control tiene la versión esperada'
@@ -163,7 +166,7 @@ else
 fi
 
 salida=$("$GATAJOS" --listar 2>&1); codigo=$?
-comprobar_codigo '--listar devuelve 0' 0 "$codigo"
+comprobar_codigo '--listar con lista larga de esquemas devuelve 0' 0 "$codigo"
 if [[ $salida == *$'\t'* && $salida == *'[oculto]'* ]]; then
   paso '--listar muestra TSV y comandos ocultos'
 else
