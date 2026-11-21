@@ -2,6 +2,16 @@
 set -Eeuo pipefail
 
 RAIZ="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+VERSION="$(dpkg-parsechangelog -l "${RAIZ}/debian/changelog" -SVersion)"
+FECHA="$(dpkg-parsechangelog -l "${RAIZ}/debian/changelog" -SDate)"
+SOURCE_DATE_EPOCH="$(date -u -d "$FECHA" +%s)"
+export SOURCE_DATE_EPOCH
+PAQUETE="${RAIZ}/dist/gatajos_${VERSION}_all.deb"
+
+if ! grep -qx "Version: ${VERSION}" "${RAIZ}/paquete_gatajos/DEBIAN/control"; then
+  printf 'Error: la versión de debian/changelog y DEBIAN/control no coincide.\n' >&2
+  exit 1
+fi
 
 rm -rf "${RAIZ}/dist"
 mkdir -p "${RAIZ}/dist"
@@ -42,12 +52,16 @@ find "${RAIZ}/paquete_gatajos/usr" -type d -exec chmod 0755 {} +
 find "${RAIZ}/paquete_gatajos/usr" -type f -exec chmod 0644 {} +
 chmod 0755 "${RAIZ}/paquete_gatajos/usr/bin/gatajos"
 
-(cd "${RAIZ}" && dpkg-deb --build --root-owner-group paquete_gatajos dist/gatajos_1.0-2_all.deb)
+touch -h -d "@${SOURCE_DATE_EPOCH}" "${RAIZ}/paquete_gatajos"
+find "${RAIZ}/paquete_gatajos/usr" -exec touch -h -d "@${SOURCE_DATE_EPOCH}" {} +
+find "${RAIZ}/paquete_gatajos/DEBIAN" -exec touch -h -d "@${SOURCE_DATE_EPOCH}" {} +
+
+(cd "${RAIZ}" && dpkg-deb --build --root-owner-group paquete_gatajos "${PAQUETE}")
 
 if command -v lintian >/dev/null 2>&1; then
-  lintian "${RAIZ}/dist/gatajos_1.0-2_all.deb" || true
+  lintian --fail-on warning --pedantic "${PAQUETE}"
 fi
 
-echo "Paquete: ${RAIZ}/dist/gatajos_1.0-2_all.deb"
+echo "Paquete: ${PAQUETE}"
 echo "SHA256:"
-sha256sum "${RAIZ}/dist/gatajos_1.0-2_all.deb"
+sha256sum "${PAQUETE}"

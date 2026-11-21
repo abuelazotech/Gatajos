@@ -1,6 +1,7 @@
 #!/bin/bash
 set -uo pipefail
 
+VERSION='1.0-3'
 MOSTRAR_COMANDOS=0
 
 validar_tecla() {
@@ -99,10 +100,10 @@ listar_atajos() {
 
 buscar_atajo() {
   local tecla="$1"
-  local resultados
+  local resultados termino="${tecla,,}"
   validar_tecla "$tecla" || return 1
   verificar_entorno || return 1
-  resultados=$(leer_atajos | grep -iF -- "$tecla")
+  resultados=$(leer_atajos | awk -F '\t' -v termino="$termino" 'index(tolower($2), termino) || index(tolower($3), termino)')
   if [[ -n $resultados ]]; then
     printf 'Coincidencias para %s:\n' "$tecla"
     printf '%s\n' "$resultados"
@@ -113,15 +114,16 @@ buscar_atajo() {
 }
 
 mostrar_ayuda() {
-  printf 'Gatajos 1.0-2\n'
+  printf 'Gatajos %s\n' "$VERSION"
   printf 'Uso: gatajos [opción] [TECLA]\n'
   printf '  Sin opciones: modo interactivo; solo espera Enter si hay terminal.\n'
   printf '  TECLA: forma abreviada de --buscar TECLA.\n'
   printf '  --listar: muestra los atajos detectados en GSettings en formato TSV.\n'
   printf '  --buscar TECLA: busca coincidencias de una tecla o combinación.\n'
-  printf '  --mostrar-comandos: muestra comandos junto a --listar o --buscar.\n'
+  printf '  --mostrar-comandos: muestra comandos junto a --listar o --buscar; puede revelar información sensible.\n'
   printf '  --help, --ayuda: muestra esta ayuda.\n'
   printf '  --version: muestra la versión.\n'
+  printf 'Códigos de salida: 0 correcto, 1 error de uso o entorno, 3 sin coincidencias.\n'
   return 0
 }
 
@@ -134,7 +136,17 @@ esperar_enter() {
 }
 
 modo=''
+modo_explicito=''
 tecla=''
+
+establecer_modo() {
+  local nuevo="$1"
+  if [[ -n $modo && $modo != "$nuevo" ]]; then
+    printf 'Error: no se pueden combinar modos; usa solo uno de --listar, --buscar o TECLA.\n' >&2
+    exit 1
+  fi
+  modo="$nuevo"
+}
 
 while (( $# > 0 )); do
   case "$1" in
@@ -143,18 +155,24 @@ while (( $# > 0 )); do
       exit 0
       ;;
     --version)
-      printf 'Gatajos 1.0-2\n'
+      printf 'Gatajos %s\n' "$VERSION"
       exit 0
       ;;
     --listar)
-      modo='listar'
+      establecer_modo 'listar'
+      modo_explicito='listar'
       shift
       ;;
     --buscar)
-      modo='buscar'
+      establecer_modo 'buscar'
+      modo_explicito='buscar'
       shift
-      if (( $# == 0 )); then
+      if (( $# == 0 )) || [[ $1 == -* ]]; then
         printf 'Error: --buscar necesita una tecla.\n' >&2
+        exit 1
+      fi
+      if [[ -n $tecla ]]; then
+        printf 'Error: la tecla ya fue especificada.\n' >&2
         exit 1
       fi
       tecla="$1"
@@ -169,7 +187,8 @@ while (( $# > 0 )); do
       exit 1
       ;;
     *)
-      if [[ -z $modo && -z $tecla ]]; then
+      if [[ -z $tecla ]]; then
+        establecer_modo 'buscar'
         tecla="$1"
         shift
       else
@@ -180,8 +199,9 @@ while (( $# > 0 )); do
   esac
 done
 
-if [[ -n $tecla ]]; then
-  modo='buscar'
+if (( MOSTRAR_COMANDOS == 1 )) && [[ $modo_explicito != 'listar' && $modo_explicito != 'buscar' ]]; then
+  printf 'Error: --mostrar-comandos solo se puede usar con --listar o --buscar.\n' >&2
+  exit 1
 fi
 
 if [[ -z $modo ]]; then

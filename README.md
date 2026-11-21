@@ -11,7 +11,7 @@ Gatajos es una utilidad de terminal que consulta los atajos de teclado de Linux 
 - Consulta los atajos de teclado definidos en la configuración de Cinnamon.
 - Muestra cada combinación de teclas con su acción.
 - Permite buscar por tecla y listar los atajos disponibles.
-- Muestra los comandos asociados a los atajos personalizados con `--mostrar-comandos`.
+- Muestra los comandos asociados a los atajos personalizados con `--mostrar-comandos` solo junto a `--listar` o `--buscar`.
 
 ### Qué NO hace
 
@@ -22,10 +22,10 @@ Gatajos es una utilidad de terminal que consulta los atajos de teclado de Linux 
 
 ## Instalación
 
-Descarga el paquete `gatajos_1.0-2_all.deb` desde la sección de releases del repositorio e instálalo con:
+Descarga el paquete `gatajos_1.0-3_all.deb` desde la sección de releases del repositorio e instálalo con:
 
 ```sh
-sudo apt install ./gatajos_1.0-2_all.deb
+sudo apt install ./gatajos_1.0-3_all.deb
 ```
 
 El paquete instala dos comandos equivalentes: `gatajos` y `buscar-atajo`.
@@ -38,7 +38,7 @@ Para generar el paquete desde el código fuente:
 ./build.sh
 ```
 
-El resultado se guarda en `dist/gatajos_1.0-2_all.deb`.
+El resultado se guarda en `dist/gatajos_1.0-3_all.deb`. La construcción fija `SOURCE_DATE_EPOCH` a partir de `debian/changelog` y falla si `lintian` encuentra advertencias.
 
 ## Uso
 
@@ -49,9 +49,17 @@ gatajos "alt+c"
 gatajos --listar
 gatajos --buscar f9
 gatajos --listar --mostrar-comandos
+gatajos --buscar f9 --mostrar-comandos
+gatajos --ayuda
 ```
 
-También puedes usar `buscar-atajo` con los mismos argumentos.
+También puedes usar `buscar-atajo` con los mismos argumentos. No se pueden combinar modos: usa solo una de las formas `TECLA`, `--buscar TECLA` o `--listar`. `--mostrar-comandos` puede revelar información sensible, por eso solo se admite con `--listar` o `--buscar`.
+
+## Códigos de salida
+
+- `0`: la operación terminó correctamente.
+- `1`: error de uso, de entorno o de validación de la tecla.
+- `3`: no hubo coincidencias para la tecla solicitada.
 
 ## Nombres de comando
 
@@ -76,7 +84,7 @@ También puedes usar `buscar-atajo` con los mismos argumentos.
 - Si el comando no se encuentra, verifica que el paquete esté instalado con `dpkg -l gatajos`.
 - Para comprobar la versión instalada, ejecuta `gatajos --version`.
 - Para ver la ayuda, ejecuta `gatajos --help`.
-- Si el paquete es de una versión anterior, reinstala el archivo `.deb` de la release 1.0-2.
+- Si el paquete es de una versión anterior, reinstala el archivo `.deb` de la release 1.0-3.
 
 ## Contribuciones
 

@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Instalar herramientas
-        run: sudo apt-get update && sudo apt-get install -y shellcheck desktop-file-utils lintian imagemagick
+        run: sudo apt-get update && sudo apt-get install -y shellcheck desktop-file-utils lintian imagemagick dpkg-dev
       - name: Verificar sintaxis de gatajos.sh
         run: bash -n gatajos.sh
       - name: Verificar sintaxis de las pruebas
@@ -23,3 +23,5 @@ jobs:
         run: ./tests/test_gatajos.sh
       - name: Construir el paquete
         run: ./build.sh
+      - name: Verificar el paquete con lintian
+        run: lintian --fail-on warning --pedantic "dist/gatajos_$(dpkg-parsechangelog -SVersion)_all.deb"

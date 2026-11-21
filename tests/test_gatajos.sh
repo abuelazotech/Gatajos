@@ -89,14 +89,21 @@ comprobar_codigo() {
   fi
 }
 
-printf 'Pruebas de Gatajos 1.0-2\n'
+printf 'Pruebas de Gatajos 1.0-3\n'
 
 salida=$("$GATAJOS" --version 2>&1); codigo=$?
 comprobar_codigo '--version devuelve 0' 0 "$codigo"
-if [[ $salida == *'Gatajos 1.0-2'* ]]; then
+if [[ $salida == *'Gatajos 1.0-3'* ]]; then
   paso '--version muestra la versión'
 else
   fallo '--version muestra la versión'
+fi
+
+salida=$(grep '^Version:' "$SCRIPT_DIR/../paquete_gatajos/DEBIAN/control")
+if [[ $salida == 'Version: 1.0-3' ]]; then
+  paso 'DEBIAN/control tiene la versión esperada'
+else
+  fallo 'DEBIAN/control tiene la versión esperada'
 fi
 
 salida=$("$GATAJOS" --help 2>&1); codigo=$?
@@ -105,6 +112,14 @@ if [[ $salida == *'--buscar'* && $salida == *'--listar'* ]]; then
   paso '--help muestra las opciones'
 else
   fallo '--help muestra las opciones'
+fi
+
+salida=$("$GATAJOS" --ayuda 2>&1); codigo=$?
+comprobar_codigo '--ayuda devuelve 0' 0 "$codigo"
+if [[ $salida == *'Códigos de salida'* ]]; then
+  paso '--ayuda documenta los códigos de salida'
+else
+  fallo '--ayuda documenta los códigos de salida'
 fi
 
 salida=$("$GATAJOS" f9 2>&1); codigo=$?
@@ -146,6 +161,62 @@ if [[ $salida == *'gnome-terminal -- echo hola'* ]]; then
   paso '--listar --mostrar-comandos muestra el comando'
 else
   fallo '--listar --mostrar-comandos muestra el comando'
+fi
+
+salida=$("$GATAJOS" --buscar f9 --mostrar-comandos 2>&1); codigo=$?
+comprobar_codigo '--buscar --mostrar-comandos devuelve 0' 0 "$codigo"
+if [[ $salida == *'gnome-terminal -- echo hola'* ]]; then
+  paso '--buscar --mostrar-comandos muestra el comando'
+else
+  fallo '--buscar --mostrar-comandos muestra el comando'
+fi
+
+salida=$("$GATAJOS" --mostrar-comandos </dev/null 2>&1); codigo=$?
+comprobar_codigo '--mostrar-comandos sin modo devuelve 1' 1 "$codigo"
+if [[ $salida == *'solo se puede usar'* ]]; then
+  paso '--mostrar-comandos sin modo explica el error'
+else
+  fallo '--mostrar-comandos sin modo explica el error'
+fi
+
+salida=$("$GATAJOS" --mostrar-comandos f9 2>&1); codigo=$?
+comprobar_codigo '--mostrar-comandos con tecla devuelve 1' 1 "$codigo"
+if [[ $salida == *'solo se puede usar'* ]]; then
+  paso '--mostrar-comandos con tecla explica el error'
+else
+  fallo '--mostrar-comandos con tecla explica el error'
+fi
+
+salida=$("$GATAJOS" f9 --listar 2>&1); codigo=$?
+comprobar_codigo 'f9 --listar devuelve 1' 1 "$codigo"
+if [[ $salida == *'no se pueden combinar modos'* ]]; then
+  paso 'f9 --listar rechaza la combinación'
+else
+  fallo 'f9 --listar rechaza la combinación'
+fi
+
+salida=$("$GATAJOS" --listar f9 2>&1); codigo=$?
+comprobar_codigo '--listar f9 devuelve 1' 1 "$codigo"
+if [[ $salida == *'no se pueden combinar modos'* ]]; then
+  paso '--listar f9 rechaza la combinación'
+else
+  fallo '--listar f9 rechaza la combinación'
+fi
+
+salida=$("$GATAJOS" --mostrar-comandos --buscar 'echo hola' 2>&1); codigo=$?
+comprobar_codigo 'la búsqueda no coincide con comandos' 3 "$codigo"
+if [[ $salida == *'No encontré coincidencias'* ]]; then
+  paso 'la búsqueda ignora la columna de comandos'
+else
+  fallo 'la búsqueda ignora la columna de comandos'
+fi
+
+salida=$("$GATAJOS" --buscar terminal 2>&1); codigo=$?
+comprobar_codigo '--buscar por nombre devuelve 0' 0 "$codigo"
+if [[ $salida == *'Abrir terminal de prueba'* ]]; then
+  paso '--buscar encuentra coincidencias por nombre'
+else
+  fallo '--buscar encuentra coincidencias por nombre'
 fi
 
 salida=$("$GATAJOS" --buscar 'mal|valor' 2>&1); codigo=$?

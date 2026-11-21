@@ -1,3 +1,13 @@
+gatajos (1.0-3) stable; urgency=medium
+
+  * Hace que lintian bloquee la construcción y quita un override obsoleto.
+  * Fija SOURCE_DATE_EPOCH para generar paquetes reproducibles.
+  * Restringe --mostrar-comandos a --listar y --buscar.
+  * Busca solo en nombres y teclas, no en comandos.
+  * Rechaza combinaciones de modos y documenta opciones y códigos de salida.
+
+ -- Angelino Santana (El Abuelazo Tech) <elabuelazotech@gmail.com>  Sat, 21 Nov 2026 12:00:00 +0000
+
 gatajos (1.0-2) stable; urgency=medium
 
   * Documenta el alcance real de la consulta de atajos de Cinnamon.
