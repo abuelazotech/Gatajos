@@ -1,9 +1,9 @@
 Package: gatajos
-Version: 1.0-3
+Version: 1.0-4
 Section: utils
 Priority: optional
 Architecture: all
-Depends: glib2.0-bin, dconf-gsettings-backend, cinnamon-desktop-data
+Depends: libglib2.0-bin, dconf-gsettings-backend, cinnamon-desktop-data
 Maintainer: Angelino Santana (El Abuelazo Tech) <elabuelazotech@gmail.com>
 Homepage: https://github.com/abuelazotech/Gatajos
 Installed-Size: 128

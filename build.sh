@@ -8,8 +8,15 @@ SOURCE_DATE_EPOCH="$(date -u -d "$FECHA" +%s)"
 export SOURCE_DATE_EPOCH
 PAQUETE="${RAIZ}/dist/gatajos_${VERSION}_all.deb"
 
+DEPENDENCIAS="$(grep '^Depends:' "${RAIZ}/paquete_gatajos/DEBIAN/control")"
+
 if ! grep -qx "Version: ${VERSION}" "${RAIZ}/paquete_gatajos/DEBIAN/control"; then
   printf 'Error: la versión de debian/changelog y DEBIAN/control no coincide.\n' >&2
+  exit 1
+fi
+
+if ! grep -qx "$DEPENDENCIAS" "${RAIZ}/debian/control"; then
+  printf 'Error: las dependencias de debian/control y DEBIAN/control no coinciden.\n' >&2
   exit 1
 fi
 

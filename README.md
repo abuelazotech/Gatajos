@@ -22,10 +22,10 @@ Gatajos es una utilidad de terminal que consulta los atajos de teclado de Linux 
 
 ## Instalación
 
-Descarga el paquete `gatajos_1.0-3_all.deb` desde la sección de releases del repositorio e instálalo con:
+Descarga el paquete `gatajos_1.0-4_all.deb` desde la sección de releases del repositorio e instálalo con:
 
 ```sh
-sudo apt install ./gatajos_1.0-3_all.deb
+sudo apt install ./gatajos_1.0-4_all.deb
 ```
 
 El paquete instala dos comandos equivalentes: `gatajos` y `buscar-atajo`.
@@ -38,7 +38,7 @@ Para generar el paquete desde el código fuente:
 ./build.sh
 ```
 
-El resultado se guarda en `dist/gatajos_1.0-3_all.deb`. La construcción fija `SOURCE_DATE_EPOCH` a partir de `debian/changelog` y falla si `lintian` encuentra advertencias.
+El resultado se guarda en `dist/gatajos_1.0-4_all.deb`. La construcción fija `SOURCE_DATE_EPOCH` a partir de `debian/changelog` y falla si `lintian` encuentra advertencias.
 
 ## Uso
 
@@ -69,7 +69,7 @@ También puedes usar `buscar-atajo` con los mismos argumentos. No se pueden comb
 ## Requisitos
 
 - Linux Mint con entorno de escritorio Cinnamon.
-- `bash`, `glib2.0-bin`, `dconf-gsettings-backend` y `cinnamon-desktop-data`.
+- `bash`, `libglib2.0-bin`, `dconf-gsettings-backend` y `cinnamon-desktop-data`.
 
 ## Limitaciones
 
@@ -84,7 +84,7 @@ También puedes usar `buscar-atajo` con los mismos argumentos. No se pueden comb
 - Si el comando no se encuentra, verifica que el paquete esté instalado con `dpkg -l gatajos`.
 - Para comprobar la versión instalada, ejecuta `gatajos --version`.
 - Para ver la ayuda, ejecuta `gatajos --help`.
-- Si el paquete es de una versión anterior, reinstala el archivo `.deb` de la release 1.0-3.
+- Si el paquete es de una versión anterior, reinstala el archivo `.deb` de la release 1.0-4.
 
 ## Contribuciones
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -uo pipefail
 
-VERSION='1.0-3'
+VERSION='1.0-4'
 MOSTRAR_COMANDOS=0
 
 validar_tecla() {

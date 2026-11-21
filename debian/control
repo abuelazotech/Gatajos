@@ -9,7 +9,7 @@ Rules-Requires-Root: no
 
 Package: gatajos
 Architecture: all
-Depends: glib2.0-bin, dconf-gsettings-backend, cinnamon-desktop-data
+Depends: libglib2.0-bin, dconf-gsettings-backend, cinnamon-desktop-data
 Description: Consulta de atajos de la configuración de Cinnamon
  Gatajos es una utilidad de terminal que lee los atajos de teclado de
  Cinnamon desde GSettings. Muestra la combinación y su acción.

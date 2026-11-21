@@ -1,3 +1,9 @@
+gatajos (1.0-4) stable; urgency=medium
+
+  * Corrige la dependencia de gsettings a libglib2.0-bin.
+
+ -- Angelino Santana (El Abuelazo Tech) <elabuelazotech@gmail.com>  Sat, 21 Nov 2026 12:30:00 +0000
+
 gatajos (1.0-3) stable; urgency=medium
 
   * Hace que lintian bloquee la construcción y quita un override obsoleto.

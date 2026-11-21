@@ -89,21 +89,36 @@ comprobar_codigo() {
   fi
 }
 
-printf 'Pruebas de Gatajos 1.0-3\n'
+printf 'Pruebas de Gatajos 1.0-4\n'
 
 salida=$("$GATAJOS" --version 2>&1); codigo=$?
 comprobar_codigo '--version devuelve 0' 0 "$codigo"
-if [[ $salida == *'Gatajos 1.0-3'* ]]; then
+if [[ $salida == *'Gatajos 1.0-4'* ]]; then
   paso '--version muestra la versión'
 else
   fallo '--version muestra la versión'
 fi
 
 salida=$(grep '^Version:' "$SCRIPT_DIR/../paquete_gatajos/DEBIAN/control")
-if [[ $salida == 'Version: 1.0-3' ]]; then
+if [[ $salida == 'Version: 1.0-4' ]]; then
   paso 'DEBIAN/control tiene la versión esperada'
 else
   fallo 'DEBIAN/control tiene la versión esperada'
+fi
+
+dependencias='Depends: libglib2.0-bin, dconf-gsettings-backend, cinnamon-desktop-data'
+salida=$(grep '^Depends:' "$SCRIPT_DIR/../paquete_gatajos/DEBIAN/control")
+if [[ $salida == "$dependencias" ]]; then
+  paso 'DEBIAN/control usa libglib2.0-bin'
+else
+  fallo 'DEBIAN/control usa libglib2.0-bin'
+fi
+
+salida=$(grep '^Depends:' "$SCRIPT_DIR/../debian/control")
+if [[ $salida == "$dependencias" ]]; then
+  paso 'debian/control usa libglib2.0-bin'
+else
+  fallo 'debian/control usa libglib2.0-bin'
 fi
 
 salida=$("$GATAJOS" --help 2>&1); codigo=$?
