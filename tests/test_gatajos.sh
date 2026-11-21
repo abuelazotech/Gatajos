@@ -17,22 +17,33 @@ case "$1" in
     done
     printf '%s\n' \
       org.cinnamon.desktop.keybindings \
-      org.cinnamon.desktop.media-keys \
-      org.gnome.desktop.default-applications.terminal
+      org.cinnamon.desktop.keybindings.wm \
+      org.cinnamon.desktop.keybindings.media-keys \
+      org.cinnamon.settings-daemon.plugins.media-keys \
+      org.gnome.desktop.wm.keybindings
     ;;
   get)
     case "$*" in
       *custom-list*)
-        printf "%s\n" "['/org/cinnamon/desktop/keybindings/custom-keybindings/custom0/']"
+        printf "%s\n" "['custom0', '__dummy__']"
         ;;
-      *custom0*name*)
+      *custom-keybinding:/org/cinnamon/desktop/keybindings/custom-keybindings/custom0/*name*)
         printf "'Abrir terminal de prueba'\n"
         ;;
-      *custom0*binding*)
-        printf "'f9'\n"
+      *custom-keybinding:/org/cinnamon/desktop/keybindings/custom-keybindings/custom0/*binding*)
+        printf "['F9']\n"
         ;;
-      *custom0*command*)
+      *custom-keybinding:/org/cinnamon/desktop/keybindings/custom-keybindings/custom0/*command*)
         printf "'gnome-terminal -- echo hola'\n"
+        ;;
+      *custom-keybinding:/org/cinnamon/desktop/keybindings/custom-keybindings/__dummy__/*name*)
+        printf "''\n"
+        ;;
+      *custom-keybinding:/org/cinnamon/desktop/keybindings/custom-keybindings/__dummy__/*binding*)
+        printf "@as []\n"
+        ;;
+      *custom-keybinding:/org/cinnamon/desktop/keybindings/custom-keybindings/__dummy__/*command*)
+        printf "''\n"
         ;;
       *)
         printf '\n'
@@ -41,22 +52,26 @@ case "$1" in
     ;;
   list-recursively)
     case "$2" in
-      org.cinnamon.desktop.keybindings)
+      org.cinnamon.desktop.keybindings.wm)
         printf '%s\n' \
           "org.cinnamon.desktop.keybindings.wm switch-to-workspace-1 ['<Control><Alt>1']" \
           "org.cinnamon.desktop.keybindings.wm switch-to-workspace-2 ['alt+c']" \
+          "org.cinnamon.desktop.keybindings.wm switch-input-source ['<Super>space', 'XF86Keyboard']" \
           "org.cinnamon.desktop.keybindings.wm switch-to-workspace-3 ['disabled']" \
           "org.cinnamon.desktop.keybindings.wm switch-to-workspace-4 []" \
-          "org.cinnamon.desktop.keybindings.wm switch-to-workspace-5 ''"
+          "org.cinnamon.desktop.keybindings.wm switch-to-workspace-5 @as []"
         ;;
-      org.cinnamon.desktop.media-keys)
+      org.cinnamon.desktop.keybindings.media-keys)
         printf '%s\n' \
-          "org.cinnamon.desktop.media-keys.media-key-play ['<Alt>F9']" \
-          "org.cinnamon.desktop.media-keys.media-key-stop ['disabled']"
+          "org.cinnamon.desktop.keybindings.media-keys play ['XF86AudioPlay']" \
+          "org.cinnamon.desktop.keybindings.media-keys stop ['disabled']"
         ;;
-      org.gnome.desktop.default-applications.terminal)
+      org.cinnamon.settings-daemon.plugins.media-keys)
         printf '%s\n' \
-          "org.gnome.desktop.default-applications.terminal exec ['gnome-terminal']"
+          "org.cinnamon.settings-daemon.plugins.media-keys volume-up ['XF86AudioRaiseVolume']"
+        ;;
+      org.cinnamon.desktop.keybindings|org.gnome.desktop.wm.keybindings)
+        printf '\n'
         ;;
       *)
         printf '\n'
@@ -173,6 +188,18 @@ else
   fallo '--listar muestra TSV y comandos ocultos'
 fi
 
+if [[ $salida == *'switch-input-source'*'<Super>space | XF86Keyboard'* ]]; then
+  paso '--listar conserva múltiples atajos'
+else
+  fallo '--listar conserva múltiples atajos'
+fi
+
+if [[ $salida == *'personalizado'*'Abrir terminal de prueba'*'F9'* ]]; then
+  paso '--listar incluye atajos personalizados'
+else
+  fallo '--listar incluye atajos personalizados'
+fi
+
 salida=$("$GATAJOS" --listar --mostrar-comandos 2>&1); codigo=$?
 comprobar_codigo '--listar --mostrar-comandos devuelve 0' 0 "$codigo"
 if [[ $salida == *'gnome-terminal -- echo hola'* ]]; then
@@ -219,6 +246,14 @@ if [[ $salida == *'no se pueden combinar modos'* ]]; then
   paso '--listar f9 rechaza la combinación'
 else
   fallo '--listar f9 rechaza la combinación'
+fi
+
+salida=$("$GATAJOS" --listar 2>&1); codigo=$?
+duplicados=$(printf '%s\n' "$salida" | awk -F '\t' '{print $2"\t"$3}' | sort | uniq -d)
+if [[ $codigo -eq 0 && $salida != *'org.gnome.desktop.wm.keybindings'* && -z $duplicados ]]; then
+  paso '--listar ignora esquemas no Cinnamon y no duplica'
+else
+  fallo '--listar ignora esquemas no Cinnamon y no duplica'
 fi
 
 salida=$("$GATAJOS" --mostrar-comandos --buscar 'echo hola' 2>&1); codigo=$?

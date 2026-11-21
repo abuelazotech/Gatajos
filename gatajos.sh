@@ -44,7 +44,7 @@ verificar_entorno() {
 }
 
 esquemas_relevantes() {
-  gsettings list-schemas 2>/dev/null | grep -E -- 'keybindings|media-keys|default-applications'
+  gsettings list-schemas 2>/dev/null | grep -E -- '^(org\.cinnamon\.desktop\.keybindings(\..*)?|org\.cinnamon\.desktop\.media-keys|org\.cinnamon\.settings-daemon\.plugins\.media-keys)$'
 }
 
 leer_atajos() {
@@ -57,36 +57,45 @@ leer_atajos() {
       [[ -n ${nombre:-} && -n ${valor:-} ]] || continue
       valor=${valor#\[}
       valor=${valor%\]}
-      valor=${valor#\'}
-      valor=${valor%\'}
-      [[ -n $valor && $valor != disabled ]] || continue
+      valor=${valor//\'/}
+      valor=${valor//, / | }
+      valor=${valor//,/ | }
+      [[ -n $valor && $valor != disabled && $valor != '@as' ]] || continue
       if (( MOSTRAR_COMANDOS == 1 )); then
         comando='-'
       else
         comando='[oculto]'
       fi
       printf 'sistema\t%s\t%s\t%s\n' "$nombre" "$valor" "$comando"
-    done < <(gsettings list-recursively "$esquema" 2>/dev/null | grep -E -- 'keybinding|media-key|default-applications' | grep -vF -- '[]' | grep -vF -- "'disabled'" | grep -vF -- "''")
+    done < <(gsettings list-recursively "$esquema" 2>/dev/null | awk '$2 != "custom-list" && $3 ~ /^\[/ {print}' | grep -vF -- '[]' | grep -vF -- "'disabled'" | grep -vF -- "''" | grep -vF -- '@as []')
   done < <(esquemas_relevantes)
 
   lista=$(gsettings get org.cinnamon.desktop.keybindings custom-list 2>/dev/null)
   lista=${lista#\[}
   lista=${lista%\]}
   lista=${lista//\'/ }
+  lista=${lista//,/ }
   read -ra rutas <<< "$lista"
   for ruta in "${rutas[@]}"; do
-    ruta=${ruta%,}
-    [[ -n $ruta ]] || continue
-    nombre_custom=$(gsettings get "org.cinnamon.desktop.keybindings.custom-keybinding:$ruta" name 2>/dev/null)
-    tecla_custom=$(gsettings get "org.cinnamon.desktop.keybindings.custom-keybinding:$ruta" binding 2>/dev/null)
-    comando_custom=$(gsettings get "org.cinnamon.desktop.keybindings.custom-keybinding:$ruta" command 2>/dev/null)
+    [[ -n $ruta && $ruta != '__dummy__' ]] || continue
+    if [[ $ruta == /* ]]; then
+      ruta_gsettings=$ruta
+    else
+      ruta_gsettings="/org/cinnamon/desktop/keybindings/custom-keybindings/$ruta/"
+    fi
+    nombre_custom=$(gsettings get "org.cinnamon.desktop.keybindings.custom-keybinding:$ruta_gsettings" name 2>/dev/null)
+    tecla_custom=$(gsettings get "org.cinnamon.desktop.keybindings.custom-keybinding:$ruta_gsettings" binding 2>/dev/null)
+    comando_custom=$(gsettings get "org.cinnamon.desktop.keybindings.custom-keybinding:$ruta_gsettings" command 2>/dev/null)
     nombre_custom=${nombre_custom#\'}
     nombre_custom=${nombre_custom%\'}
-    tecla_custom=${tecla_custom#\'}
-    tecla_custom=${tecla_custom%\'}
+    tecla_custom=${tecla_custom#\[}
+    tecla_custom=${tecla_custom%\]}
+    tecla_custom=${tecla_custom//\'/}
+    tecla_custom=${tecla_custom//, / | }
+    tecla_custom=${tecla_custom//,/ | }
     comando_custom=${comando_custom#\'}
     comando_custom=${comando_custom%\'}
-    [[ -n $nombre_custom && -n $tecla_custom && $tecla_custom != disabled ]] || continue
+    [[ -n $nombre_custom && -n $tecla_custom && $tecla_custom != disabled && $tecla_custom != '@as' ]] || continue
     if (( MOSTRAR_COMANDOS == 1 )); then
       comando=$comando_custom
     else
